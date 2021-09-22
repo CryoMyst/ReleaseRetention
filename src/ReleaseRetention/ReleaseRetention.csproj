@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ReleaseRetention.Abstractions\ReleaseRetention.Abstractions.csproj" />
+      <ProjectReference Include="..\Retention.Abstractions\Retention.Abstractions.csproj" />
+      <ProjectReference Include="..\Retention\Retention.csproj" />
+    </ItemGroup>
+
+</Project>
