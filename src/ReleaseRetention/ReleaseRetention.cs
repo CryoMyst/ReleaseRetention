@@ -27,6 +27,9 @@ namespace ReleaseRetention
         /// </summary>
         private readonly ILogger<ReleaseRetention> _logger;
         
+        /// <summary>
+        ///     PolicyManager
+        /// </summary>
         public IReleaseRetentionPolicyManager PolicyManager { get; }
         
         /// <summary>
