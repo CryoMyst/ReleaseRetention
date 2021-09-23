@@ -5,32 +5,35 @@ using Retention.Abstractions;
 
 namespace ReleaseRetention
 {
+    /// <summary>
+    ///     Used to build the policy manager outside of the DI context.
+    /// </summary>
     public class ReleaseRetentionPolicyManagerBuilder
     {
         /// <summary>
         ///     The base policy.
         /// </summary>
         internal IRetentionPolicy<IRelease>? BasePolicy { get; private set; }
-        
+
         /// <summary>
         ///  Stores all the general state policies
         /// </summary>
-        internal IDictionary<object, IRetentionPolicy<IRelease>> BaseStatePolicies { get; } 
+        internal IDictionary<object, IRetentionPolicy<IRelease>> BaseStatePolicies { get; }
             = new Dictionary<object, IRetentionPolicy<IRelease>>();
-        
+
         /// <summary>
         ///     Stores all the project specific state policies
         /// </summary>
-        internal IDictionary<StatePolicyKey<string>, IRetentionPolicy<IRelease>> ProjectStatePolicies { get; } 
-            = new Dictionary<StatePolicyKey<string>,IRetentionPolicy<IRelease>>();
+        internal IDictionary<StatePolicyKey<string>, IRetentionPolicy<IRelease>> ProjectStatePolicies { get; }
+            = new Dictionary<StatePolicyKey<string>, IRetentionPolicy<IRelease>>();
 
         /// <summary>
         ///     Stores all the environment specific state policies
         /// </summary>
-        internal IDictionary<StatePolicyKey<string>, IRetentionPolicy<IRelease>> EnvironmentStatePolicies { get; } 
-            = new Dictionary<StatePolicyKey<string>,IRetentionPolicy<IRelease>>();
-        
-                /// <summary>
+        internal IDictionary<StatePolicyKey<string>, IRetentionPolicy<IRelease>> EnvironmentStatePolicies { get; }
+            = new Dictionary<StatePolicyKey<string>, IRetentionPolicy<IRelease>>();
+
+        /// <summary>
         ///     Sets a base policy for all releases.
         /// </summary>
         /// <param name="policy">
@@ -45,7 +48,7 @@ namespace ReleaseRetention
             {
                 throw new ArgumentException("Cannot set a null base policy");
             }
-            
+
             this.BasePolicy = policy;
         }
 
@@ -80,7 +83,7 @@ namespace ReleaseRetention
             var key = new StatePolicyKey<string>(state, project.Id);
             this.ProjectStatePolicies[key] = policy;
         }
-        
+
         /// <summary>
         ///     Sets an overriding policy for a particular environment
         /// </summary>

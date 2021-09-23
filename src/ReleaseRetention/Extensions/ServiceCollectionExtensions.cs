@@ -2,8 +2,6 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ReleaseRetention.Abstractions;
-using Retention;
-using Retention.Abstractions;
 using Retention.Extensions;
 
 namespace ReleaseRetention.Extensions
@@ -28,7 +26,7 @@ namespace ReleaseRetention.Extensions
         /// <returns>
         ///     The service collection.
         /// </returns>
-        public static IServiceCollection AddReleaseRetention<TReleaseSource,TReleaseRemovalHandler>
+        public static IServiceCollection AddReleaseRetention<TReleaseSource, TReleaseRemovalHandler>
         (this IServiceCollection services,
             Action<ReleaseRetentionPolicyManagerBuilder>? policyManagerBuilder = null)
             where TReleaseSource : class, IReleaseSource
@@ -36,8 +34,8 @@ namespace ReleaseRetention.Extensions
         {
             services.AddRetention();
 
-            services.TryAddScoped(typeof(IReleaseRetention), typeof(ReleaseRetention));
-            services.TryAddScoped(typeof(IReleaseRetentionPolicyManager), typeof(ReleaseRetentionPolicyManager));
+            services.TryAddSingleton(typeof(IReleaseRetention), typeof(ReleaseRetention));
+            services.TryAddSingleton(typeof(IReleaseRetentionPolicyManager), typeof(ReleaseRetentionPolicyManager));
             services.TryAddScoped(typeof(IReleaseSource), typeof(TReleaseSource));
             services.TryAddScoped(typeof(IReleaseRemovalHandler), typeof(TReleaseRemovalHandler));
 

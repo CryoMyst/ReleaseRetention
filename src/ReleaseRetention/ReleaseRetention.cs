@@ -10,28 +10,28 @@ using Retention.Abstractions;
 
 namespace ReleaseRetention
 {
+    /// <summary>
+    ///     The main implementation of Release Retention, Handles the useage of getting Releases from
+    ///     <see cref="IReleaseSource" />, using the policy manager against each release and calling
+    ///     <see cref="IReleaseRemovalHandler" /> for any releases that do not fit the policy.
+    /// </summary>
     public class ReleaseRetention : IReleaseRetention
     {
-        /// <summary>
-        ///     The source of releases.
-        /// </summary>
-        private readonly IReleaseSource _releaseSource;
-        
-        /// <summary>
-        ///     Handles the removal of releases after policies are applied.
-        /// </summary>
-        private readonly IReleaseRemovalHandler _removalHandler;
-        
         /// <summary>
         ///     The logger for ReleaseRetention.
         /// </summary>
         private readonly ILogger<ReleaseRetention> _logger;
-        
+
         /// <summary>
-        ///     PolicyManager
+        ///     The source of releases.
         /// </summary>
-        public IReleaseRetentionPolicyManager PolicyManager { get; }
-        
+        private readonly IReleaseSource _releaseSource;
+
+        /// <summary>
+        ///     Handles the removal of releases after policies are applied.
+        /// </summary>
+        private readonly IReleaseRemovalHandler _removalHandler;
+
         /// <summary>
         ///     Constructor for Release Retention implementation.
         /// </summary>
@@ -52,6 +52,11 @@ namespace ReleaseRetention
         }
 
         /// <summary>
+        ///     PolicyManager
+        /// </summary>
+        public IReleaseRetentionPolicyManager PolicyManager { get; }
+
+        /// <summary>
         ///     Run ReleaseRetention getting all releases and removing what needs to be removed.
         /// </summary>
         /// <param name="cancellationToken"></param>
@@ -59,15 +64,15 @@ namespace ReleaseRetention
         {
             using var logScope = this._logger.BeginScope("ReleaseRetention RunAsync");
             // Get all releases
-            
+
             this._logger.LogTrace("Getting all releases");
             var releases = (await this._releaseSource.GetAsync(cancellationToken)).ToList();
             this._logger.LogInformation("{} Releases found", releases.Count);
-            
+
             // create a retention context
             this._logger.LogTrace("Creating retention context");
             var retentionContext = new RetentionContext<IRelease>(this.PolicyManager, this._logger);
-            
+
             // Apply the policies to all releases
             // (I know this list has to resize, but easier to debug)
             var releaseResults = new List<IRetentionResult<IRelease>>(releases.Count);
@@ -98,7 +103,7 @@ namespace ReleaseRetention
                 .Where(r => !r.Success)
                 .Select(r => r.Value)
                 .ToList(); // Prevent multiple enumeration
-            
+
             this._logger.LogInformation("Removing {} releases", releasesToRemove.Count);
             await this._removalHandler.Remove(releasesToRemove);
             this._logger.LogInformation("Finished removing releases");

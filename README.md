@@ -11,7 +11,6 @@
 * Highly detailed return result allowing the caller to analyze what policies failed
 
 ### TODO:
-* Use builders to create policies to make neater, can remove passing RetentionContext down the policy chain
 * Caching to speed up lookup for LastReleasedPolicy
 
 
