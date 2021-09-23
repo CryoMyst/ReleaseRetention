@@ -4,6 +4,9 @@ using ReleaseRetention.Abstractions.Model;
 
 namespace ReleaseRetention.Abstractions
 {
+    /// <summary>
+    ///     A handler that will be notified when a release needs to be removed.
+    /// </summary>
     public interface IReleaseRemovalHandler
     {
         /// <summary>

@@ -6,13 +6,16 @@ using Retention.Abstractions;
 
 namespace ReleaseRetention.Policies
 {
+    /// <summary>
+    ///     Last Released Policy implementation, used to keep the last N releases in an Environment/Project grouping.
+    /// </summary>
     public class LastReleasedPolicy : IRetentionPolicy<IRelease>
     {
         /// <summary>
         ///     The number of recent environment/project releases to keep.
         /// </summary>
         private readonly int _numberOfReleasesToKeep;
-        
+
         /// <summary>
         ///     Constructor for LastReleasedPolicy.
         /// </summary>
@@ -38,11 +41,11 @@ namespace ReleaseRetention.Policies
         {
             var logger = context.Logger;
             using var logScope = logger.BeginScope(nameof(LastReleasedPolicy));
-            
+
             logger.LogTrace("Checking {} is in last {} deployed", release.Id, this._numberOfReleasesToKeep);
             // Grab the project the release is in
             var project = release.Project;
-            
+
             // Grab the environments this release is in
             var environments = release.Deployments.Select(d => d.Environment)
                 .Where(e => e is not null);
@@ -53,12 +56,12 @@ namespace ReleaseRetention.Policies
             foreach (var environment in environments)
             {
                 logger.LogTrace("Checking against environment: {}", environment.Id);
-                
+
                 // All releases in same project
                 var projectReleases = project?.Releases ?? Enumerable.Empty<IRelease>();
 
                 // All releases in same environment
-                var environmentReleases = environment?.Deployments.Select(d => d.Release) 
+                var environmentReleases = environment?.Deployments.Select(d => d.Release)
                                           ?? Enumerable.Empty<IRelease>();
 
                 // intersect the results
@@ -68,13 +71,13 @@ namespace ReleaseRetention.Policies
                 var latestReleases = releasesInBothProjectAndEnviroment
                     .OrderByDescending(r => r.Deployments.OrderByDescending(d => d.DeployedAt).First().DeployedAt)
                     .Take(this._numberOfReleasesToKeep);
-                
+
                 // Check to see if any match this release id
                 var inLatestReleases = latestReleases.Any(r => r.Id == release.Id);
 
                 if (inLatestReleases)
                 {
-                    logger.LogInformation("{} passed policy because it was in the most recently {} deployed in {}", 
+                    logger.LogInformation("{} passed policy because it was in the most recently {} deployed in {}",
                         release.Id,
                         this._numberOfReleasesToKeep,
                         environment.Name);

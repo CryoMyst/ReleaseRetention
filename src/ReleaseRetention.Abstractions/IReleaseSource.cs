@@ -8,7 +8,7 @@ namespace ReleaseRetention.Abstractions
     /// <summary>
     ///     Defines an implementation for grabbing releases
     /// </summary>
-    public interface IAsyncReleaseSource
+    public interface IReleaseSource
     {
         /// <summary>
         ///     Gets all releases

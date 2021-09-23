@@ -15,7 +15,7 @@ namespace ReleaseRetention
         /// <summary>
         ///     The base policy.
         /// </summary>
-        private IRetentionPolicy<IRelease> _basePolicy;
+        private IRetentionPolicy<IRelease>? _basePolicy;
         
         /// <summary>
         ///     The logger for <see cref="ReleaseRetentionPolicyManager"/>
@@ -40,18 +40,19 @@ namespace ReleaseRetention
         /// <summary>
         ///     Constructor to create a release retention policy manager
         /// </summary>
-        /// <param name="basePolicy">
-        ///     The required base policy.
-        /// </param>
         /// <param name="logger">
         ///     The logger.
         /// </param>
         public ReleaseRetentionPolicyManager(
-            IRetentionPolicy<IRelease> basePolicy,
+            ReleaseRetentionPolicyManagerBuilder policyManagerBuilder,
             ILogger<ReleaseRetentionPolicyManager> logger)
         {
-            this._basePolicy = basePolicy;
             this._logger = logger;
+            
+            this._basePolicy = policyManagerBuilder.BasePolicy;
+            this._baseStatePolicies = policyManagerBuilder.BaseStatePolicies;
+            this._projectStatePolicies = policyManagerBuilder.ProjectStatePolicies;
+            this._environmentStatePolicies = policyManagerBuilder.EnvironmentStatePolicies;
         }
 
         /// <summary>
@@ -159,19 +160,5 @@ namespace ReleaseRetention
             
             return foundPolicy;
         }
-
-        /// <summary>
-        ///     Used as a key to store specific state keys
-        /// </summary>
-        /// <param name="State">
-        ///     The state in the key.
-        /// </param>
-        /// <param name="Id">
-        ///     The id in the key.
-        /// </param>
-        /// <typeparam name="T">
-        ///     The id type.
-        /// </typeparam>
-        private record StatePolicyKey<T>(object State, T Id);
     }
 }
