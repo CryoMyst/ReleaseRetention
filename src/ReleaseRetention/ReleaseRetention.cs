@@ -15,7 +15,7 @@ namespace ReleaseRetention
         /// <summary>
         ///     The source of releases.
         /// </summary>
-        private readonly IAsyncReleaseSource _releaseSource;
+        private readonly IReleaseSource _releaseSource;
         
         /// <summary>
         ///     Handles the removal of releases after policies are applied.
@@ -41,7 +41,7 @@ namespace ReleaseRetention
         /// <param name="logger"></param>
         public ReleaseRetention(
             IReleaseRetentionPolicyManager policyManager,
-            IAsyncReleaseSource releaseSource,
+            IReleaseSource releaseSource,
             IReleaseRemovalHandler removalHandler,
             ILogger<ReleaseRetention> logger)
         {
