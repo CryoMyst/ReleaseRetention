@@ -1,6 +1,11 @@
 # Release Retention
 ## Octopus Deploy take home assessment.
 
+## UPDATE 23/9/21
+* New Extension methods for adding to ServiceCollection
+* New builder type for creating your ReleaseRetentionPolicyManager
+* General moving of types around for improvements
+
 ### Features
 * Base Retention library that can be used for other types.
 * Highly extendable policy system with built in logical operators
@@ -12,7 +17,6 @@
 
 ### TODO:
 * Caching to speed up lookup for LastReleasedPolicy
-
 
 ### Exmaple of the power of policies with conditions
 ```cs
